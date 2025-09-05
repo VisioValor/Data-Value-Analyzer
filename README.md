@@ -2,17 +2,19 @@
 
 A comprehensive tool for analyzing and determining the market value of datasets using machine learning. This application provides both a command-line interface and a web interface for easy dataset analysis.
 
-![VisioValor Logo](assets/logos/visiovalor_logo_black.svg)
+**🔐 Secure Access Required** - Login authentication system protects your data and analysis.
 
 ## Features
 
+- 🔐 **Secure Authentication** - Login system protects your data and analysis
 - 📊 **Data Quality Analysis** - Comprehensive quality metrics and scoring
 - 💰 **Market Value Prediction** - ML-powered value estimation with multiple pricing tiers
 - 📈 **Interactive Visualizations** - Beautiful charts and graphs using Plotly
-- 📑 **Detailed Reports** - Comprehensive analysis reports with recommendations
+- 📑 **PDF Report Generation** - Download comprehensive analysis reports
 - 🌐 **Web Interface** - Easy-to-use Streamlit web application
 - 💻 **CLI Interface** - Command-line tool for batch processing
-- 🎨 **Adaptive Branding** - VisioValor logos that adapt to light/dark themes
+- 🤝 **Data Consultation** - Interactive quality assessment workflow
+- 📋 **Progress Tracking** - Visual progress indicators for analysis steps
 
 ## Quick Start
 
@@ -48,11 +50,17 @@ streamlit run src/frontend/app.py
 
 Then open your browser and go to: **http://localhost:8501**
 
+**Login Credentials:**
+- **Username:** `admin`
+- **Password:** `D@ta4L1fe!`
+
 The web interface provides:
+- Secure login authentication
 - File upload functionality
 - Interactive data quality consultation
 - Real-time analysis results
 - Beautiful visualizations
+- PDF report generation
 
 #### Option 2: Command Line Interface
 
@@ -67,6 +75,7 @@ Follow the prompts to provide the path to your dataset file.
 
 - CSV files (`.csv`)
 - Excel files (`.xlsx`, `.xls`)
+- JSON files (`.json`)
 
 ## Project Structure
 
@@ -80,7 +89,10 @@ datarade_scraping/
 │   ├── models/                  # Machine learning models
 │   │   └── data_value_model.py # Value prediction model
 │   ├── utils/                   # Helper functions
+│   │   ├── auth.py             # Authentication system
 │   │   ├── data_cleaner.py     # Data preprocessing
+│   │   ├── pdf_report_generator.py # PDF report generation
+│   │   ├── report_collector.py # Report data collection
 │   │   └── report_utils.py     # Report generation
 │   └── data_quality_consultation/ # Quality assessment
 │       ├── consultation.py     # Consultation logic
@@ -95,14 +107,22 @@ datarade_scraping/
 
 ## How It Works
 
-1. **Data Upload**: Upload your CSV or Excel file through the web interface or provide the file path via CLI
-2. **Quality Analysis**: The system analyzes your dataset for:
+1. **Authentication**: Login with your credentials to access the application
+2. **Data Upload**: Upload your CSV, Excel, or JSON file through the web interface
+3. **Data Quality Check**: The system analyzes your dataset for:
    - Completeness and accuracy
+   - Data coverage and history
+   - Missing values and data quality
+4. **Data Consultation**: Interactive assessment covering:
    - Data uniqueness and rarity
    - Volume and scale
-   - Accessibility and usability
-3. **Value Prediction**: Machine learning models predict the market value based on quality metrics
-4. **Report Generation**: Generate comprehensive reports with pricing recommendations
+   - Access and governance
+   - Security and monetization
+5. **Value Analysis**: Machine learning models predict market value with:
+   - Multiple pricing tiers
+   - Confidence scores
+   - Industry benchmarks
+6. **Report Generation**: Download comprehensive PDF reports with all analysis results
 
 ## Features in Detail
 
@@ -123,21 +143,39 @@ datarade_scraping/
 - **Guided Assessment**: Step-by-step quality evaluation
 - **Custom Scoring**: Tailored scoring based on your specific needs
 - **Visual Feedback**: Real-time progress and scoring visualization
+- **Progress Tracking**: Visual indicators for completion status
+
+### PDF Report Generation
+- **Comprehensive Reports**: All analysis results in one document
+- **Professional Formatting**: Clean, branded report layout
+- **Download Ready**: Instant PDF generation and download
+- **Complete Analysis**: Includes quality metrics, consultation results, and valuation
+
+### Security Features
+- **Login Authentication**: Secure access with username/password
+- **Session Management**: 24-hour session timeout
+- **Data Protection**: Your data stays secure during analysis
 
 ## Troubleshooting
 
 ### Common Issues
 
-1. **Import Errors**: Make sure all dependencies are installed:
+1. **Login Issues**: Make sure you're using the correct credentials:
+   - Username: `admin`
+   - Password: `D@ta4L1fe!`
+
+2. **Import Errors**: Make sure all dependencies are installed:
    ```bash
    pip install -r requirements.txt
    ```
 
-2. **Port Already in Use**: If port 8501 is busy, Streamlit will automatically use the next available port (8502, 8503, etc.)
+3. **Port Already in Use**: If port 8501 is busy, Streamlit will automatically use the next available port (8502, 8503, etc.)
 
-3. **File Upload Issues**: Ensure your file is in CSV or Excel format and not corrupted
+4. **File Upload Issues**: Ensure your file is in CSV, Excel, or JSON format and not corrupted
 
-4. **Model Loading Warnings**: You may see scikit-learn version warnings - these are harmless and won't affect functionality
+5. **Model Loading Warnings**: You may see scikit-learn version warnings - these are harmless and won't affect functionality
+
+6. **Session Timeout**: If you're logged out automatically, simply log in again - sessions expire after 24 hours
 
 ### Getting Help
 
