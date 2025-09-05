@@ -505,8 +505,9 @@ def main():
                     report = analyzer.analyze_dataset(str(file_path), consultation_results)
                 
                 if report:
-                    # Mark valuation as complete
+                    # Mark valuation as complete and store report
                     st.session_state.valuation_complete = True
+                    st.session_state.valuation_report = report
 
                     # Display analysis results
                     st.success("Analysis complete! 🎉")

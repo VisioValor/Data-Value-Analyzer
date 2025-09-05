@@ -385,15 +385,58 @@ class PDFReportGenerator:
         
         pricing_tiers = valuation.get('pricing_tiers', {})
         if pricing_tiers:
-            for tier_name, tier_data in pricing_tiers.items():
-                price = tier_data.get('price', 0)
-                target_market = tier_data.get('target_market', 'N/A')
-                features = tier_data.get('features', 'N/A')
+            # Create a table for pricing tiers similar to the Value Analysis page
+            table_data = [['Tier', 'One-Time Purchase', 'Monthly Subscription', 'Yearly Subscription']]
+            
+            # Add Conservative, Recommended, Premium rows
+            tiers = ['Conservative', 'Recommended', 'Premium']
+            for tier in tiers:
+                row = [tier]
                 
-                elements.append(Paragraph(f"{tier_name} - ${price:,.0f}", self.styles['SubsectionHeader']))
-                elements.append(Paragraph(f"Target Market: {target_market}", self.styles['CustomBodyText']))
-                elements.append(Paragraph(f"Features: {features}", self.styles['CustomBodyText']))
-                elements.append(Spacer(1, 8))
+                # One-Time Purchase
+                if 'One-Time Purchase' in pricing_tiers and tier in pricing_tiers['One-Time Purchase']:
+                    row.append(pricing_tiers['One-Time Purchase'][tier])
+                else:
+                    row.append('N/A')
+                
+                # Monthly Subscription
+                if 'Monthly Subscription' in pricing_tiers and tier in pricing_tiers['Monthly Subscription']:
+                    row.append(pricing_tiers['Monthly Subscription'][tier])
+                else:
+                    row.append('N/A')
+                
+                # Yearly Subscription
+                if 'Yearly Subscription' in pricing_tiers and tier in pricing_tiers['Yearly Subscription']:
+                    row.append(pricing_tiers['Yearly Subscription'][tier])
+                else:
+                    row.append('N/A')
+                
+                table_data.append(row)
+            
+            # Create the table
+            pricing_table = Table(table_data)
+            pricing_table.setStyle(TableStyle([
+                ('BACKGROUND', (0, 0), (-1, 0), colors.grey),
+                ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
+                ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+                ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+                ('FONTSIZE', (0, 0), (-1, 0), 12),
+                ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
+                ('BACKGROUND', (0, 1), (-1, -1), colors.beige),
+                ('GRID', (0, 0), (-1, -1), 1, colors.black)
+            ]))
+            
+            elements.append(pricing_table)
+            elements.append(Spacer(1, 12))
+            
+            # Add explanation
+            explanation_text = """
+            The pricing tiers provide three different pricing options for your dataset:
+            • Conservative: Lower-risk pricing suitable for bulk purchases or long-term commitments
+            • Recommended: Our suggested optimal price based on comprehensive market analysis
+            • Premium: A premium tier for high-value use cases or exclusive rights
+            """
+            elements.append(Paragraph(explanation_text, self.styles['CustomBodyText']))
         
         return elements
     

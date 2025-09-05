@@ -92,36 +92,77 @@ class ReportCollector:
         if 'valuation_complete' not in st.session_state or not st.session_state.valuation_complete:
             return {}
         
-        # This would typically come from the actual valuation analysis
-        # For now, we'll create a placeholder structure
-        return {
-            'estimated_value': 50000,  # This should come from actual analysis
-            'quality_score': 7.5,     # This should come from actual analysis
-            'pricing_tiers': {
-                'Basic': {
-                    'price': 10000,
-                    'target_market': 'Small businesses and startups',
-                    'features': 'Basic data access, standard support',
-                    'value_proposition': 'Essential data insights for small-scale operations'
-                },
-                'Professional': {
-                    'price': 25000,
-                    'target_market': 'Mid-size companies',
-                    'features': 'Advanced analytics, priority support, API access',
-                    'value_proposition': 'Comprehensive data solutions for growing businesses'
-                },
-                'Enterprise': {
-                    'price': 50000,
-                    'target_market': 'Large enterprises',
-                    'features': 'Full data suite, dedicated support, custom integration',
-                    'value_proposition': 'Enterprise-grade data solutions with full customization'
+        # Get the actual valuation report from session state if available
+        if hasattr(st.session_state, 'valuation_report') and st.session_state.valuation_report:
+            report = st.session_state.valuation_report
+            
+            # Extract pricing information from the actual report
+            value_pred = report.get("Value Prediction", {})
+            
+            # Calculate estimated value from the recommended one-time purchase
+            estimated_value = 0
+            if "Once-off Purchase" in value_pred and "Recommended" in value_pred["Once-off Purchase"]:
+                # Extract numeric value from formatted string like "$1,234.56 USD"
+                price_str = value_pred["Once-off Purchase"]["Recommended"]
+                try:
+                    estimated_value = float(price_str.replace("$", "").replace(",", "").replace(" USD", ""))
+                except:
+                    estimated_value = 0
+            
+            # Extract quality score
+            quality_score = 0
+            if "Quality Score" in value_pred:
+                try:
+                    quality_score = float(value_pred["Quality Score"].replace("/100", ""))
+                except:
+                    quality_score = 0
+            
+            # Convert pricing tiers to the format expected by PDF generator
+            pricing_tiers = {}
+            if "Once-off Purchase" in value_pred:
+                pricing_tiers['One-Time Purchase'] = {
+                    'Conservative': value_pred["Once-off Purchase"]["Conservative"],
+                    'Recommended': value_pred["Once-off Purchase"]["Recommended"],
+                    'Premium': value_pred["Once-off Purchase"]["Premium"]
                 }
-            },
+            
+            if "Monthly Subscription" in value_pred:
+                pricing_tiers['Monthly Subscription'] = {
+                    'Conservative': value_pred["Monthly Subscription"]["Conservative"],
+                    'Recommended': value_pred["Monthly Subscription"]["Recommended"],
+                    'Premium': value_pred["Monthly Subscription"]["Premium"]
+                }
+            
+            if "Yearly Subscription" in value_pred:
+                pricing_tiers['Yearly Subscription'] = {
+                    'Conservative': value_pred["Yearly Subscription"]["Conservative"],
+                    'Recommended': value_pred["Yearly Subscription"]["Recommended"],
+                    'Premium': value_pred["Yearly Subscription"]["Premium"]
+                }
+            
+            return {
+                'estimated_value': estimated_value,
+                'quality_score': quality_score,
+                'pricing_tiers': pricing_tiers,
+                'value_prediction': value_pred,
+                'market_factors': {
+                    'data_rarity': 'High' if quality_score > 80 else 'Medium' if quality_score > 60 else 'Low',
+                    'market_demand': 'Strong' if quality_score > 75 else 'Moderate' if quality_score > 50 else 'Weak',
+                    'competitive_advantage': 'High' if quality_score > 85 else 'Moderate' if quality_score > 65 else 'Low',
+                    'commercial_applicability': 'High' if quality_score > 70 else 'Medium' if quality_score > 45 else 'Low'
+                }
+            }
+        
+        # Fallback to placeholder if no actual data available
+        return {
+            'estimated_value': 0,
+            'quality_score': 0,
+            'pricing_tiers': {},
             'market_factors': {
-                'data_rarity': 'High',
-                'market_demand': 'Strong',
-                'competitive_advantage': 'Moderate',
-                'commercial_applicability': 'High'
+                'data_rarity': 'Unknown',
+                'market_demand': 'Unknown',
+                'competitive_advantage': 'Unknown',
+                'commercial_applicability': 'Unknown'
             }
         }
     
