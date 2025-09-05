@@ -229,24 +229,8 @@ def download_cleaned_data(df):
 def create_progress_sidebar():
     """Create a detailed progress tracking sidebar"""
     # Display VisioValor logo at the top of sidebar
-    # Use the selected theme from the toggle
-    theme = st.session_state.logo_theme if st.session_state.logo_theme != 'auto' else None
-    display_logo(theme=theme, in_sidebar=True, width=180, height=70)
-    st.sidebar.markdown("---")  # Add separator line
-    
-    # Add theme toggle for logo testing
-    theme_options = ['auto', 'light', 'dark']
-    selected_theme = st.sidebar.selectbox(
-        "Logo Theme", 
-        theme_options, 
-        index=theme_options.index(st.session_state.logo_theme),
-        key="logo_theme_selector"
-    )
-    
-    if selected_theme != st.session_state.logo_theme:
-        st.session_state.logo_theme = selected_theme
-        st.rerun()
-    
+    # Auto-detect theme based on Streamlit's current theme
+    display_logo(in_sidebar=True, width=200, height=60)
     st.sidebar.markdown("---")  # Add separator line
     st.sidebar.title("Navigation")
     
@@ -375,8 +359,6 @@ def main():
         st.session_state.cleaned_df = None
     if 'consultation_complete' not in st.session_state:
         st.session_state.consultation_complete = False
-    if 'logo_theme' not in st.session_state:
-        st.session_state.logo_theme = 'auto'
     
     # Create detailed progress sidebar and get selected page
     page = create_progress_sidebar()

@@ -12,37 +12,49 @@ def get_logo_path():
 def detect_theme():
     """Detect if the current theme is light or dark"""
     try:
-        # Use CSS to detect theme by checking background color
-        # This is injected via st.markdown with unsafe_allow_html=True
-        theme_detection_script = """
-        <script>
-        function detectTheme() {
-            const root = document.documentElement;
-            const computedStyle = getComputedStyle(root);
-            const bgColor = computedStyle.getPropertyValue('--background-color').trim();
-            
-            // Check if background is dark (low luminance)
-            if (bgColor) {
-                const rgb = bgColor.match(/\\d+/g);
-                if (rgb && rgb.length >= 3) {
-                    const r = parseInt(rgb[0]);
-                    const g = parseInt(rgb[1]);
-                    const b = parseInt(rgb[2]);
+        import streamlit as st
+        
+        # Use a more sophisticated theme detection
+        # We'll inject some CSS to detect the theme and store it in session state
+        if 'detected_theme' not in st.session_state:
+            # Inject CSS to detect theme
+            theme_detection_css = """
+            <script>
+            function detectStreamlitTheme() {
+                const root = document.documentElement;
+                const computedStyle = getComputedStyle(root);
+                
+                // Check various CSS variables that indicate theme
+                const bgColor = computedStyle.getPropertyValue('--background-color');
+                const textColor = computedStyle.getPropertyValue('--text-color');
+                
+                // If we can't detect, default to dark
+                if (!bgColor || !textColor) return 'dark';
+                
+                // Simple heuristic: if background is very dark, it's dark theme
+                const bgRgb = bgColor.match(/\\d+/g);
+                if (bgRgb && bgRgb.length >= 3) {
+                    const r = parseInt(bgRgb[0]);
+                    const g = parseInt(bgRgb[1]);
+                    const b = parseInt(bgRgb[2]);
                     const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
                     return luminance < 0.5 ? 'dark' : 'light';
                 }
+                
+                return 'dark';
             }
-            return 'dark'; // Default to dark
-        }
-        
-        // Store theme in session storage for access
-        sessionStorage.setItem('streamlit_theme', detectTheme());
-        </script>
-        """
-        
-        # For now, we'll use a simple approach
-        # In a real implementation, you might want to use st.components.v1.html
-        # or check Streamlit's theme configuration
+            
+            // Store theme in session storage
+            const theme = detectStreamlitTheme();
+            sessionStorage.setItem('streamlit_theme', theme);
+            </script>
+            """
+            
+            st.markdown(theme_detection_css, unsafe_allow_html=True)
+            st.session_state.detected_theme = 'dark'  # Default
+        else:
+            return st.session_state.detected_theme
+            
         return "dark"  # Default to dark theme
     except:
         return "dark"
@@ -94,42 +106,24 @@ def display_logo(theme=None, width=200, height=80, align="center", use_theme_tog
         use_theme_toggle (bool): If True, adds a theme toggle button
         in_sidebar (bool): If True, displays in sidebar with proper formatting
     """
-    if use_theme_toggle and not in_sidebar:
-        # Add theme toggle in sidebar
-        if 'logo_theme' not in st.session_state:
-            st.session_state.logo_theme = 'auto'
-        
-        theme_options = ['auto', 'light', 'dark']
-        selected_theme = st.sidebar.selectbox(
-            "Logo Theme", 
-            theme_options, 
-            index=theme_options.index(st.session_state.logo_theme),
-            key="logo_theme_selector"
-        )
-        
-        if selected_theme != st.session_state.logo_theme:
-            st.session_state.logo_theme = selected_theme
-            st.rerun()
-        
-        # Use selected theme
-        if st.session_state.logo_theme == 'auto':
-            actual_theme = None
-        else:
-            actual_theme = st.session_state.logo_theme
-    else:
-        actual_theme = theme
-    
     if in_sidebar:
         # Display logo in sidebar using st.image
         logo_path = get_logo_path()
         
-        if actual_theme == "light" or (actual_theme is None and detect_theme() == "light"):
-            logo_file = logo_path / "visiovalor_logo_black.svg"
+        # Auto-detect theme - prefer webp files for better performance
+        if theme == "light" or (theme is None and detect_theme() == "light"):
+            # Try webp first, fallback to svg
+            logo_file = logo_path / "visiovalor_logo_black.webp"
+            if not logo_file.exists():
+                logo_file = logo_path / "visiovalor_logo_black.svg"
         else:
-            logo_file = logo_path / "visiovalor_logo_white.svg"
+            # Try webp first, fallback to svg
+            logo_file = logo_path / "visiovalor_logo_white.webp"
+            if not logo_file.exists():
+                logo_file = logo_path / "visiovalor_logo_white.svg"
         
         if logo_file.exists():
-            # Display logo in sidebar centered
+            # Display logo in sidebar with proper sizing
             st.sidebar.image(str(logo_file), width=width)
         else:
             # Fallback to text in sidebar
