@@ -461,41 +461,86 @@ class PDFReportGenerator:
         elements.append(Paragraph("Methodology", self.styles['SectionHeader']))
         elements.append(Spacer(1, 12))
         
-        # Data quality methodology
-        elements.append(Paragraph("Data Quality Assessment", self.styles['SubsectionHeader']))
+        # Overview
+        elements.append(Paragraph("Comprehensive Three-Tier Valuation Approach", self.styles['SubsectionHeader']))
+        
+        overview_text = """
+        Our valuation methodology employs a sophisticated three-tier approach that combines 
+        automated data quality assessment, comprehensive consultation evaluation, and machine 
+        learning enhancement to provide accurate market valuations. This integrated approach 
+        ensures that all aspects of data value are properly considered and weighted.
+        """
+        elements.append(Paragraph(overview_text, self.styles['CustomBodyText']))
+        elements.append(Spacer(1, 12))
+        
+        # Tier 1: Data Quality Assessment
+        elements.append(Paragraph("Tier 1: Data Quality Assessment", self.styles['SubsectionHeader']))
         
         quality_methodology = """
-        Our data quality assessment employs industry-standard metrics including completeness 
-        (percentage of non-null values), accuracy (conformity to expected formats and ranges), 
-        consistency (uniformity across records), uniqueness (absence of duplicates), and validity 
-        (adherence to business rules and constraints). Each metric is scored on a 0-1 scale 
-        and weighted according to business impact.
+        Our automated data quality assessment employs industry-standard metrics including:
+        • Completeness: Percentage of non-null values across the dataset
+        • Coverage: Data comprehensiveness and scope relative to optimal dataset size
+        • History: Temporal depth and historical value based on date/time columns
+        • Accuracy: Conformity to expected formats and ranges
+        • Consistency: Uniformity across records and data types
+        
+        Each metric is scored on a 0-1 scale and contributes to the overall quality assessment.
         """
         elements.append(Paragraph(quality_methodology, self.styles['CustomBodyText']))
         elements.append(Spacer(1, 12))
         
-        # Consultation methodology
-        elements.append(Paragraph("Consultation Framework", self.styles['SubsectionHeader']))
+        # Tier 2: Comprehensive Data Consultation
+        elements.append(Paragraph("Tier 2: Comprehensive Data Consultation", self.styles['SubsectionHeader']))
         
         consultation_methodology = """
-        The consultation framework evaluates eight key dimensions: data uniqueness, volume, 
-        accuracy and quality, access and usability, governance, security, monetization potential, 
-        and strategic value. Each dimension is assessed through structured questions and scored 
-        on a 1-10 scale, with weighted aggregation providing an overall assessment score.
+        The consultation framework evaluates eight critical dimensions through 97 detailed questions:
+        • Data Uniqueness (20% weight): Industry exclusivity, organizational specificity, granularity
+        • Data Volume (10% weight): Scale, frequency, time span, diversity, growth rate
+        • Data Accuracy & Quality (15% weight): Validation, error detection, cleansing, integrity
+        • Data Access & Usability (15% weight): Documentation, APIs, integration, user experience
+        • Data Governance (10% weight): Management, policies, compliance, risk assessment
+        • Data Security (10% weight): Protection, encryption, monitoring, incident response
+        • Monetization Potential (15% weight): Market demand, ROI, scalability, partnerships
+        • Strategic Value (5% weight): Business alignment, competitive insights, innovation
+        
+        Each question is scored 1-10, with weighted aggregation providing the total consultation score.
         """
         elements.append(Paragraph(consultation_methodology, self.styles['CustomBodyText']))
         elements.append(Spacer(1, 12))
         
-        # Valuation methodology
-        elements.append(Paragraph("Market Valuation Approach", self.styles['SubsectionHeader']))
+        # Tier 3: Machine Learning Enhancement
+        elements.append(Paragraph("Tier 3: Machine Learning Enhancement", self.styles['SubsectionHeader']))
         
-        valuation_methodology = """
-        Market valuation combines data quality metrics, consultation scores, and market 
-        benchmarking to estimate commercial value. The approach considers factors such as 
-        data rarity, market demand, competitive landscape, and commercial applicability 
-        to provide realistic value estimates and pricing recommendations.
+        ml_methodology = """
+        Our pre-trained machine learning model enhances the valuation by:
+        • Analyzing dataset characteristics and patterns
+        • Comparing against market benchmarks and similar datasets
+        • Combining consultation results (70%) with quality metrics (30%)
+        • Generating enhanced value scores for accurate market pricing
+        • Applying industry-specific adjustments and market dynamics
+        
+        The ML model ensures that valuations reflect current market conditions and 
+        industry best practices while maintaining consistency across different datasets.
         """
-        elements.append(Paragraph(valuation_methodology, self.styles['CustomBodyText']))
+        elements.append(Paragraph(ml_methodology, self.styles['CustomBodyText']))
+        elements.append(Spacer(1, 12))
+        
+        # Final Calculation
+        elements.append(Paragraph("Final Value Calculation", self.styles['SubsectionHeader']))
+        
+        calculation_text = """
+        The final value score combines all three tiers:
+        1. Consultation assessment provides the primary score (70% weight)
+        2. Quality metrics enhance the assessment (30% weight)
+        3. ML model applies market intelligence and benchmarking
+        
+        This integrated approach ensures that valuations are:
+        • Comprehensive: All aspects of data value are considered
+        • Accurate: Based on detailed assessment and market intelligence
+        • Consistent: Standardized methodology across all evaluations
+        • Actionable: Provides clear insights for data monetization strategies
+        """
+        elements.append(Paragraph(calculation_text, self.styles['CustomBodyText']))
         
         return elements
     

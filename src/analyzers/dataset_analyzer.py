@@ -277,22 +277,42 @@ class DatasetAnalyzer:
             },
             "Valuation Methodology": {
                 "Overview": [
-                    f"We've analyzed your dataset using advanced AI technology to determine its market value. "
-                    f"Your data shows a quality score of {quality:.1%}, which measures how complete and accurate your dataset is. "
-                    f"The coverage score of {coverage:.1%} tells us how comprehensive your data is, and the historical depth "
-                    f"score of {history:.1%} indicates how well it captures changes over time.",
+                    f"We've analyzed your dataset using a comprehensive three-tier approach to determine its market value:",
                     "",
-                    f"Based on these factors, your dataset received an overall value score of {value_score:.1f} out of 100. "
-                    f"We looked at your {df.shape[0]:,} rows of data and {df.shape[1]} different types of information "
-                    "to calculate fair market prices across different tiers.",
+                    "**1. Data Quality Assessment**",
+                    f"• Data Quality Score: {quality:.1%} - Measures completeness and accuracy",
+                    f"• Coverage Score: {coverage:.1%} - Assesses data comprehensiveness and scope", 
+                    f"• History Score: {history:.1%} - Evaluates temporal depth and historical value",
                     "",
-                    "For each pricing option (one-time purchase, monthly subscription, or yearly subscription), "
-                    "we provide three price points:",
-                    "- Conservative: A lower-risk pricing suitable for bulk purchases or long-term commitments",
-                    "- Recommended: Our suggested optimal price based on market analysis",
-                    "- Premium: A premium tier for high-value use cases or exclusive rights",
+                    "**2. Comprehensive Data Consultation**",
+                    "• 97 detailed questions across 8 weighted categories",
+                    "• Data Uniqueness (20% weight): Industry exclusivity and proprietary value",
+                    "• Data Volume (10% weight): Scale, frequency, and growth potential",
+                    "• Data Accuracy & Quality (15% weight): Validation, cleansing, and integrity",
+                    "• Data Access & Usability (15% weight): Documentation, APIs, and user experience",
+                    "• Data Governance (10% weight): Management, policies, and compliance",
+                    "• Data Security (10% weight): Protection, encryption, and risk management",
+                    "• Monetization Potential (15% weight): Market demand and revenue opportunities",
+                    "• Strategic Value (5% weight): Business alignment and competitive advantage",
                     "",
-                    "The yearly subscription offers the best value, providing a significant discount compared to "
+                    "**3. Machine Learning Enhancement**",
+                    "• Pre-trained ML model analyzes dataset characteristics",
+                    "• Combines consultation results (70%) with quality metrics (30%)",
+                    "• Generates enhanced value score for accurate market pricing",
+                    "",
+                    f"**Final Value Calculation**",
+                    f"Your dataset received an enhanced value score of {value_score:.1f}/100, combining:",
+                    f"• Consultation assessment: Comprehensive 97-question evaluation",
+                    f"• Quality metrics: {df.shape[0]:,} rows × {df.shape[1]} columns analysis",
+                    f"• ML prediction: Advanced pattern recognition and market comparison",
+                    "",
+                    "**Pricing Tiers**",
+                    "For each pricing option, we provide three price points:",
+                    "• Conservative: Lower-risk pricing for bulk purchases or long-term commitments",
+                    "• Recommended: Optimal price based on comprehensive market analysis",
+                    "• Premium: Premium tier for high-value use cases or exclusive rights",
+                    "",
+                    "The yearly subscription offers the best value, providing significant savings compared to "
                     "monthly payments while ensuring access to updates and support."
                 ]
             }

@@ -551,6 +551,49 @@ def main():
                     with st.expander("📘 Valuation Methodology"):
                         for line in report["Valuation Methodology"]["Overview"]:
                             st.write(line)
+                        
+                        # Add visual methodology diagram
+                        st.markdown("---")
+                        st.subheader("🔬 Three-Tier Valuation Process")
+                        
+                        # Create a visual representation of the methodology
+                        col1, col2, col3 = st.columns(3)
+                        
+                        with col1:
+                            st.markdown("""
+                            **🔍 Tier 1: Data Quality**
+                            
+                            • Completeness analysis
+                            • Coverage assessment  
+                            • Historical depth evaluation
+                            • Accuracy validation
+                            • Consistency checks
+                            """)
+                        
+                        with col2:
+                            st.markdown("""
+                            **🤝 Tier 2: Consultation**
+                            
+                            • 97 detailed questions
+                            • 8 weighted categories
+                            • Strategic assessment
+                            • Market potential analysis
+                            • Risk evaluation
+                            """)
+                        
+                        with col3:
+                            st.markdown("""
+                            **🤖 Tier 3: ML Enhancement**
+                            
+                            • Pattern recognition
+                            • Market benchmarking
+                            • Score combination (70/30)
+                            • Industry adjustments
+                            • Final value calculation
+                            """)
+                        
+                        st.markdown("---")
+                        st.info("💡 **Integration**: The final value combines consultation results (70%) with quality metrics (30%), enhanced by ML market intelligence for accurate pricing.")
                     
                     # Add PDF download section
                     st.markdown("---")
