@@ -15,7 +15,7 @@ from src.utils.report_utils import print_report
 from src.data_quality_consultation.consultation import DataConsultation
 from src.utils.pdf_report_generator import PDFReportGenerator
 from src.utils.report_collector import ReportCollector
-from src.utils.logo_utils import display_logo, get_favicon_data, detect_theme
+# Logo utilities removed - using text-only branding
 
 # Import from data_quality_tool if needed
 # from data_quality_tool.app import analyze_data_quality
@@ -228,9 +228,14 @@ def download_cleaned_data(df):
 
 def create_progress_sidebar():
     """Create a detailed progress tracking sidebar"""
-    # Display VisioValor logo at the top of sidebar
-    # Auto-detect theme based on Streamlit's current theme
-    display_logo(in_sidebar=True, width=200, height=60)
+    # Display VisioValor company name at the top of sidebar
+    st.sidebar.markdown("""
+    <div style="text-align: center; margin-bottom: 20px;">
+        <h1 style="color: #262730; font-family: 'Source Sans Pro', Arial, sans-serif; font-size: 24px; font-weight: 600; margin: 0; letter-spacing: -0.5px;">
+            VisioValor
+        </h1>
+    </div>
+    """, unsafe_allow_html=True)
     st.sidebar.markdown("---")  # Add separator line
     st.sidebar.title("Navigation")
     
@@ -343,12 +348,9 @@ def create_progress_sidebar():
     return page
 
 def main():
-    # Get favicon data
-    favicon_data = get_favicon_data()
-    
     st.set_page_config(
         page_title="VisioValor Data Valuation App",
-        page_icon=favicon_data if favicon_data else "💎",
+        page_icon="💎",
         layout="wide"
     )
     

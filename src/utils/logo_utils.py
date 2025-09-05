@@ -110,17 +110,21 @@ def display_logo(theme=None, width=200, height=80, align="center", use_theme_tog
         # Display logo in sidebar using st.image
         logo_path = get_logo_path()
         
-        # Auto-detect theme - prefer webp files for better performance
+        # Use the specific webp files provided by user
         if theme == "light" or (theme is None and detect_theme() == "light"):
-            # Try webp first, fallback to svg
-            logo_file = logo_path / "visiovalor_logo_black.webp"
+            # Use 1.webp for light theme
+            logo_file = logo_path / "1.webp"
             if not logo_file.exists():
-                logo_file = logo_path / "visiovalor_logo_black.svg"
+                logo_file = logo_path / "visiovalor_logo_black.webp"
+                if not logo_file.exists():
+                    logo_file = logo_path / "visiovalor_logo_black.svg"
         else:
-            # Try webp first, fallback to svg
-            logo_file = logo_path / "visiovalor_logo_white.webp"
+            # Use 2.webp for dark theme
+            logo_file = logo_path / "2.webp"
             if not logo_file.exists():
-                logo_file = logo_path / "visiovalor_logo_white.svg"
+                logo_file = logo_path / "visiovalor_logo_white.webp"
+                if not logo_file.exists():
+                    logo_file = logo_path / "visiovalor_logo_white.svg"
         
         if logo_file.exists():
             # Display logo in sidebar with proper sizing
