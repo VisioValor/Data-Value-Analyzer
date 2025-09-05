@@ -41,12 +41,13 @@ class DatasetAnalyzer:
             self.model.train(str(self.metadata_path))
             self.model.save_model(str(self.model_path))
 
-    def analyze_dataset(self, file_path):
+    def analyze_dataset(self, file_path, consultation_results=None):
         """
         Analyze a dataset file and generate a comprehensive value report.
         
         Args:
             file_path (str): Path to the dataset file (CSV or Excel)
+            consultation_results (dict): Optional consultation results with weighted scores
             
         Returns:
             dict: Detailed analysis report including statistics, quality metrics, and valuations
@@ -54,10 +55,25 @@ class DatasetAnalyzer:
         try:
             df = self._load_dataset(file_path)
             quality, coverage, history = self.calculate_quality_metrics(df)
-            value_score = self.model.predict_value(quality, coverage, history)
-            value_tiers = self.calculate_usd_value(df, quality, value_score)
             
-            return self._generate_report(df, quality, coverage, history, value_score, value_tiers)
+            # Use consultation results if available, otherwise fall back to ML model
+            if consultation_results and 'total_score' in consultation_results:
+                # Convert consultation score (0-10 scale) to value score (0-100 scale)
+                consultation_score = consultation_results['total_score']
+                value_score = min(100, max(0, consultation_score * 10))  # Scale 0-10 to 0-100
+                
+                # Enhance with basic quality metrics
+                enhanced_value_score = self._enhance_with_quality_metrics(
+                    value_score, quality, coverage, history
+                )
+            else:
+                # Fall back to ML model prediction
+                value_score = self.model.predict_value(quality, coverage, history)
+                enhanced_value_score = value_score
+            
+            value_tiers = self.calculate_usd_value(df, quality, enhanced_value_score)
+            
+            return self._generate_report(df, quality, coverage, history, enhanced_value_score, value_tiers, consultation_results)
         except Exception as e:
             print(f"Error analyzing dataset: {str(e)}")
             return None
@@ -135,6 +151,34 @@ class DatasetAnalyzer:
 
         return 0.5  # Default score if no valid date columns found
 
+    def _enhance_with_quality_metrics(self, consultation_score, quality, coverage, history):
+        """
+        Enhance consultation score with basic quality metrics.
+        
+        Args:
+            consultation_score (float): Base consultation score (0-100)
+            quality (float): Data quality score (0-1)
+            coverage (float): Data coverage score (0-1)
+            history (float): Data history score (0-1)
+            
+        Returns:
+            float: Enhanced value score (0-100)
+        """
+        # Convert quality metrics to 0-100 scale
+        quality_100 = quality * 100
+        coverage_100 = coverage * 100
+        history_100 = history * 100
+        
+        # Weighted combination: 70% consultation, 30% quality metrics
+        enhanced_score = (
+            consultation_score * 0.7 +  # Primary: consultation results
+            quality_100 * 0.15 +        # Secondary: data quality
+            coverage_100 * 0.10 +       # Tertiary: data coverage
+            history_100 * 0.05          # Quaternary: data history
+        )
+        
+        return min(100, max(0, enhanced_score))
+
     def calculate_usd_value(self, df, quality_score, value_score):
         """
         Calculate estimated USD value based on dataset characteristics and quality.
@@ -200,9 +244,9 @@ class DatasetAnalyzer:
         
         return price_tiers
 
-    def _generate_report(self, df, quality, coverage, history, value_score, value_tiers):
+    def _generate_report(self, df, quality, coverage, history, value_score, value_tiers, consultation_results=None):
         """Generate a comprehensive analysis report."""
-        return {
+        report = {
             "Dataset Statistics": {
                 "Number of Rows": f"{df.shape[0]:,}",
                 "Number of Columns": df.shape[1],
@@ -252,4 +296,14 @@ class DatasetAnalyzer:
                     "monthly payments while ensuring access to updates and support."
                 ]
             }
-        } 
+        }
+        
+        # Add consultation results if available
+        if consultation_results and 'total_score' in consultation_results:
+            report["Consultation Results"] = {
+                "Total Weighted Score": f"{consultation_results['total_score']:.2f}/10",
+                "Categories": consultation_results.get('categories', {}),
+                "Methodology": "Enhanced valuation based on comprehensive data consultation assessment"
+            }
+        
+        return report 

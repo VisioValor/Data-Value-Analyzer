@@ -494,22 +494,58 @@ def main():
                 file_path = temp_path / "temp_analysis.csv"
                 df.to_csv(file_path, index=False)
                 
+                # Get consultation results if available
+                consultation_results = None
+                if hasattr(st.session_state, 'responses') and st.session_state.responses:
+                    from src.utils.report_collector import ReportCollector
+                    consultation_results = ReportCollector.collect_consultation_results()
+                
                 # Analyze the dataset
                 with st.spinner("Analyzing your dataset..."):
                     analyzer = DatasetAnalyzer()
-                    report = analyzer.analyze_dataset(str(file_path))
+                    report = analyzer.analyze_dataset(str(file_path), consultation_results)
                 
                 if report:
                     # Mark valuation as complete
                     st.session_state.valuation_complete = True
-                    
+
                     # Display analysis results
                     st.success("Analysis complete! 🎉")
+                    
+                    # Show consultation integration if available
+                    if consultation_results and 'total_score' in consultation_results:
+                        st.info(f"📊 **Enhanced Analysis**: This valuation incorporates your consultation results (Score: {consultation_results['total_score']:.1f}/10) with weighted assessment across all data quality categories.")
                     
                     # Display key metrics
                     display_metrics(report)
                     st.markdown("---")
                     display_dataset_stats(report)
+                    
+                    # Display consultation results if available
+                    if consultation_results and 'total_score' in consultation_results:
+                        st.markdown("---")
+                        st.subheader("📊 Consultation Assessment Results")
+                        
+                        # Create a summary of consultation results
+                        categories = consultation_results.get('categories', {})
+                        if categories:
+                            col1, col2 = st.columns(2)
+                            
+                            with col1:
+                                st.markdown("**Category Breakdown:**")
+                                for category, data in categories.items():
+                                    score = data.get('score', 0)
+                                    weight = data.get('weight', 0)
+                                    st.write(f"• **{category}**: {score:.1f}/10 (Weight: {weight*100:.0f}%)")
+                            
+                            with col2:
+                                st.metric(
+                                    "Total Consultation Score", 
+                                    f"{consultation_results['total_score']:.1f}/10",
+                                    help="Weighted average of all consultation categories"
+                                )
+                        
+                        st.markdown("---")
                     display_pricing_tiers(report)
                     
                     with st.expander("📘 Valuation Methodology"):
