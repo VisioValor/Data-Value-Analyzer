@@ -9,40 +9,120 @@ from .visualization import show_results
 
 class DataConsultation:
     def __init__(self):
-        # Hardcoded questions and weights
+        # Comprehensive questions and weights from data.js
         self.tabs = {
             "Data Uniqueness": [
                 { "question": "Is the data unique within the industry?: Consider how exclusive your data is in the market.", "description": "1-3: The data is commonly available and easily replicated by competitors. <br>4-6: The data is moderately unique and somewhat difficult to replicate. <br>7-10: The data is highly unique or proprietary, offering significant exclusivity." },
                 { "question": "How rare is this data compared to competitors?: Evaluate its uniqueness against industry standards.", "description": "1-3: The data is general and could apply to any similar organization. <br>4-6: The data is somewhat tailored but could still be applied by competitors. <br>7-10: The data is highly specific to your organization and difficult to use elsewhere without adaptation." },
-                # ... (add all other questions from Data Uniqueness)
+                { "question": "Industry Rarity: How unique is this data within your industry? (Consider whether other companies have access to similar data or if this data is hard to replicate.)", "description": "1-3: The data is commonly available and easily replicated by competitors. <br>4-6: The data is moderately unique and somewhat difficult to replicate. <br>7-10: The data is highly unique or proprietary, offering significant exclusivity." },
+                { "question": "Organizational Specificity: How tailored is the data to your organization's operations, products, or customers?", "description": "1-3: The data is general and could apply to any similar organization. <br>4-6: The data is somewhat tailored but could still be applied by competitors. <br>7-10: The data is highly specific to your organization and difficult to use elsewhere without adaptation." },
+                { "question": "Granularity and Depth: How granular or detailed is the data? (The more granular, the more potentially unique it can be.)", "description": "1-3: The data provides broad or high-level information. <br>4-6: The data offers moderate detail but lacks in-depth insights. <br>7-10: The data is highly granular and offers deep insights, setting it apart from more generalized datasets." },
+                { "question": "Historical Availability: How unique is the historical value of this data (i.e., data collected over a long period)?", "description": "1-3: The data is recent or easily replaceable with other sources. <br>4-6: The data includes some historical value, which offers moderate uniqueness. <br>7-10: The data has a long history that would be challenging for others to replicate." },
+                { "question": "Contextual Enrichment: How much unique context does this data provide? (Contextual data could include insights into consumer behavior, operational processes, or market shifts specific to the organization.)", "description": "1-3: The data has little contextual enrichment and is easily accessible in other formats. <br>4-6: The data provides moderate context but could be recreated by competitors. <br>7-10: The data is enriched with unique insights or context that makes it valuable and challenging to replicate." },
+                { "question": "Data Source Exclusivity: Does this data come from exclusive sources or partnerships that are hard for others to access?", "description": "1-3: The data is publicly available or sourced from common channels. <br>4-6: The data is semi-exclusive, requiring moderate access barriers. <br>7-10: The data comes from exclusive sources, making it very difficult for others to access." },
+                { "question": "Data Enhancement Techniques: Have you applied proprietary techniques to enhance or clean the data, making it more valuable and unique?", "description": "1-3: No proprietary enhancements; data remains standard. <br>4-6: Some enhancements, but methods are replicable by others. <br>7-10: Highly proprietary enhancement techniques used, making replication difficult." },
+                { "question": "Temporal Uniqueness: Does the data capture unique time-based trends or insights that are critical for your industry?", "description": "1-3: Data lacks unique time-based value. <br>4-6: Captures some temporal insights, but they are moderately available to others. <br>7-10: Provides unique, time-based insights that are critical and difficult to replicate." },
+                { "question": "Proprietary Data Collection Methods: Were proprietary or innovative methods used to collect this data?", "description": "1-3: Common data collection methods used. <br>4-6: Somewhat unique methods, but replicable. <br>7-10: Proprietary collection methods make the data difficult to reproduce." },
+                { "question": "Data Interdependencies: Does this data rely on or create unique interdependencies with other data sets that increase its value?", "description": "1-3: No unique interdependencies; data stands alone. <br>4-6: Some interdependencies, but not critical for uniqueness. <br>7-10: Strong interdependencies with other unique data sets, enhancing its value." }
             ],
             "Data Volume": [
                 { "question": "What is the size of the dataset?: Measure the total amount of data collected.", "description": "1-3: The dataset is small (e.g., a few thousand records or a few megabytes). <br>4-6: The dataset is moderate in size (e.g., hundreds of thousands of records or gigabytes). <br>7-10: The dataset is very large (e.g., millions of records or terabytes)." },
-                # ... (add all other questions from Data Volume)
+                { "question": "How frequently is the data updated?: Consider the frequency of data refresh.", "description": "1-3: The dataset covers only a small fraction of the intended scope. <br>4-6: The dataset provides moderate coverage. <br>7-10: The dataset provides extensive or near-complete coverage of the area." },
+                { "question": "Size of the Dataset: What is the size of the dataset in terms of storage or record count?", "description": "1-3: The dataset is small (e.g., a few thousand records or a few megabytes). <br>4-6: The dataset is moderate in size (e.g., hundreds of thousands of records or gigabytes). <br>7-10: The dataset is very large (e.g., millions of records or terabytes)." },
+                { "question": "Coverage of Data Points: How well does the dataset cover the area it represents (e.g., population, market, product categories)?", "description": "1-3: The dataset covers only a small fraction of the intended scope. <br>4-6: The dataset provides moderate coverage. <br>7-10: The dataset provides extensive or near-complete coverage of the area." },
+                { "question": "Frequency of Data Collection: How frequently is the data collected or updated?", "description": "1-3: Data is collected infrequently (e.g., annually or once in a few years). <br>4-6: Data is collected on a regular basis but not frequently (e.g., quarterly). <br>7-10: Data is collected frequently (e.g., real-time, daily, or weekly)." },
+                { "question": "Time Span Covered: How many years or months of historical data does the dataset contain?", "description": "1-3: The data covers a short time span (e.g., a few months). <br>4-6: The data covers a moderate time span (e.g., 1-5 years). <br>7-10: The data spans a significant time period (e.g., over 5 years)." },
+                { "question": "Diversity of Data Types: How many different types or formats of data are included (e.g., structured, unstructured, text, images, etc.)?", "description": "1-3: Limited data types, primarily structured or simple formats. <br>4-6: Moderate diversity, with a mix of structured and unstructured data. <br>7-10: High diversity, including multiple types of structured and unstructured data (text, images, video, etc.)." },
+                { "question": "Granularity of the Data: How detailed is the dataset? Does it capture data at a fine or coarse level?", "description": "1-3: The data is publicly available or sourced from common channels. <br>4-6: The data is semi-exclusive, requiring moderate access barriers. <br>7-10: The data comes from exclusive sources, making it very difficult for others to access." },
+                { "question": "Data Density: How densely populated is the dataset with meaningful data points versus sparsely populated or incomplete data?", "description": "1-3: Low density; many gaps or sparse coverage. <br>4-6: Moderate density; some gaps but generally useful. <br>7-10: High density; rich with relevant and complete data." },
+                { "question": "Data Redundancy: Does the dataset have a significant amount of redundant or duplicate data?", "description": "1-3: High redundancy, impacting data quality. <br>4-6: Some redundancy, manageable but noticeable. <br>7-10: Minimal redundancy, data is well-curated." },
+                { "question": "Data Compression and Storage Efficiency: Are there measures to efficiently compress and store the data without losing important details?", "description": "1-3: No compression or inefficient storage methods. <br>4-6: Some compression, but not optimized. <br>7-10: Highly efficient storage and compression techniques." },
+                { "question": "Data Growth Rate: How quickly is the dataset growing over time? Is the growth rate manageable or overwhelming?", "description": "1-3: Slow or stagnant growth. <br>4-6: Moderate and steady growth. <br>7-10: Rapid growth, well-managed and scalable." },
+                { "question": "Data Sampling Method: If the dataset is a sample, how representative is it of the overall population or area of interest?", "description": "1-3: Poor sampling; not representative. <br>4-6: Somewhat representative but with limitations. <br>7-10: Highly representative and statistically sound." }
             ],
             "Data Accuracy and Quality": [
                 { "question": "How accurate is the data?: Evaluate the correctness and precision of the data.", "description": "1-3: The data contains significant errors or inaccuracies. <br>4-6: The data is moderately accurate with some errors. <br>7-10: The data is highly accurate with minimal errors." },
-                # ... (add all other questions from Data Accuracy and Quality)
+                { "question": "How complete is the dataset?: Assess if there are missing values or gaps.", "description": "1-3: The dataset has significant gaps or missing values. <br>4-6: The dataset is mostly complete with some gaps. <br>7-10: The dataset is highly complete with minimal missing values." },
+                { "question": "How consistent is the data format and structure?: Check for standardization.", "description": "1-3: The data format is inconsistent and poorly structured. <br>4-6: The data format is somewhat standardized. <br>7-10: The data format is highly consistent and well-structured." },
+                { "question": "How timely is the data?: Consider if it's up-to-date and relevant.", "description": "1-3: The data is outdated or irrelevant. <br>4-6: The data is somewhat current. <br>7-10: The data is very current and timely." },
+                { "question": "Data Validation: Are there processes in place to validate data accuracy?", "description": "1-3: Limited or no validation processes. <br>4-6: Basic validation processes exist. <br>7-10: Comprehensive validation processes are in place." },
+                { "question": "Error Detection: How effectively can errors be identified and corrected?", "description": "1-3: Poor error detection capabilities. <br>4-6: Basic error detection exists. <br>7-10: Advanced error detection and correction systems." },
+                { "question": "Data Cleansing: Are there procedures for cleaning and standardizing data?", "description": "1-3: Limited data cleansing procedures. <br>4-6: Basic cleansing processes exist. <br>7-10: Robust data cleansing and standardization." },
+                { "question": "Quality Metrics: Are there established metrics for measuring data quality?", "description": "1-3: Few or no quality metrics. <br>4-6: Basic quality metrics exist. <br>7-10: Comprehensive quality measurement system." },
+                { "question": "Data Integrity: How well is data integrity maintained throughout processing?", "description": "1-3: Poor integrity controls. <br>4-6: Basic integrity measures exist. <br>7-10: Strong integrity maintenance throughout." },
+                { "question": "Quality Monitoring: Is there ongoing monitoring of data quality?", "description": "1-3: Limited quality monitoring. <br>4-6: Periodic quality checks. <br>7-10: Continuous quality monitoring and alerts." },
+                { "question": "Data Profiling: How well is the data profiled for quality assessment?", "description": "1-3: Limited profiling capabilities. <br>4-6: Basic profiling tools used. <br>7-10: Advanced profiling and assessment tools." },
+                { "question": "Quality Standards: Are there defined standards for data quality?", "description": "1-3: Few or no quality standards. <br>4-6: Basic quality standards exist. <br>7-10: Comprehensive quality standards framework." }
             ],
             "Data Access and Usability": [
                 { "question": "How easily can the data be accessed?: Consider technical barriers.", "description": "1-3: The data is difficult to access with significant barriers. <br>4-6: The data is moderately accessible. <br>7-10: The data is easily accessible with minimal barriers." },
-                # ... (add all other questions from Data Access and Usability)
+                { "question": "How well is the data documented?: Check for metadata and documentation.", "description": "1-3: Poor or no documentation exists. <br>4-6: Basic documentation is available. <br>7-10: Comprehensive documentation exists." },
+                { "question": "How interoperable is the data?: Assess compatibility with other systems.", "description": "1-3: The data has poor compatibility. <br>4-6: The data has moderate compatibility. <br>7-10: The data is highly compatible with various systems." },
+                { "question": "How user-friendly is the data format?: Consider ease of use.", "description": "1-3: The data format is difficult to work with. <br>4-6: The data format is moderately user-friendly. <br>7-10: The data format is very user-friendly." },
+                { "question": "Data Integration: How easily can the data be integrated with other systems?", "description": "1-3: Difficult integration process. <br>4-6: Moderate integration capabilities. <br>7-10: Easy and seamless integration." },
+                { "question": "API Availability: Are there APIs available for accessing the data?", "description": "1-3: No APIs available. <br>4-6: Basic API access exists. <br>7-10: Comprehensive API ecosystem." },
+                { "question": "Data Export: How easily can the data be exported to different formats?", "description": "1-3: Limited export capabilities. <br>4-6: Basic export options available. <br>7-10: Flexible and comprehensive export options." },
+                { "question": "Search Capabilities: How effectively can users search and find data?", "description": "1-3: Poor search functionality. <br>4-6: Basic search capabilities. <br>7-10: Advanced search and discovery tools." },
+                { "question": "Data Visualization: Are there tools for visualizing the data?", "description": "1-3: Limited visualization options. <br>4-6: Basic visualization tools. <br>7-10: Advanced visualization capabilities." },
+                { "question": "Access Controls: How granular are the access control mechanisms?", "description": "1-3: Basic access controls. <br>4-6: Role-based access control. <br>7-10: Fine-grained access control system." },
+                { "question": "Data Sharing: How easily can data be shared with authorized users?", "description": "1-3: Difficult sharing process. <br>4-6: Basic sharing capabilities. <br>7-10: Seamless and secure sharing options." },
+                { "question": "User Interface: How intuitive is the interface for accessing data?", "description": "1-3: Poor user interface. <br>4-6: Adequate user interface. <br>7-10: Highly intuitive and user-friendly interface." }
             ],
             "Data Governance": [
                 { "question": "How well is the data managed?: Consider data governance practices.", "description": "1-3: Poor data management practices. <br>4-6: Basic data management in place. <br>7-10: Strong data governance framework exists." },
-                # ... (add all other questions from Data Governance)
+                { "question": "Are there clear data ownership and responsibilities?: Check governance structure.", "description": "1-3: Unclear ownership and responsibilities. <br>4-6: Some defined roles exist. <br>7-10: Clear ownership and responsibilities established." },
+                { "question": "How well are data policies documented?: Assess policy framework.", "description": "1-3: Poor or no policy documentation. <br>4-6: Basic policies are documented. <br>7-10: Comprehensive policy framework exists." },
+                { "question": "How effectively is data quality monitored?: Check quality control.", "description": "1-3: Limited quality monitoring. <br>4-6: Basic quality controls exist. <br>7-10: Robust quality monitoring system in place." },
+                { "question": "Data Lifecycle Management: How well is the data lifecycle managed?", "description": "1-3: Poor lifecycle management. <br>4-6: Basic lifecycle processes exist. <br>7-10: Comprehensive lifecycle management." },
+                { "question": "Compliance Monitoring: How well is regulatory compliance monitored?", "description": "1-3: Limited compliance monitoring. <br>4-6: Basic compliance checks. <br>7-10: Comprehensive compliance framework." },
+                { "question": "Change Management: How are changes to data governance managed?", "description": "1-3: Poor change management. <br>4-6: Basic change processes. <br>7-10: Robust change management system." },
+                { "question": "Risk Assessment: How well are data-related risks assessed?", "description": "1-3: Limited risk assessment. <br>4-6: Basic risk evaluation. <br>7-10: Comprehensive risk management." },
+                { "question": "Policy Enforcement: How effectively are data policies enforced?", "description": "1-3: Poor policy enforcement. <br>4-6: Basic enforcement measures. <br>7-10: Strong policy enforcement system." },
+                { "question": "Stakeholder Management: How well are stakeholder interests managed?", "description": "1-3: Poor stakeholder management. <br>4-6: Basic stakeholder engagement. <br>7-10: Strong stakeholder collaboration." },
+                { "question": "Governance Tools: Are there tools supporting governance processes?", "description": "1-3: Limited governance tools. <br>4-6: Basic tools available. <br>7-10: Advanced governance toolset." },
+                { "question": "Training and Awareness: How well are staff trained on governance?", "description": "1-3: Limited training provided. <br>4-6: Basic training exists. <br>7-10: Comprehensive training program." }
             ],
             "Data Security": [
                 { "question": "How secure is the data?: Evaluate security measures.", "description": "1-3: Basic or minimal security measures. <br>4-6: Standard security measures in place. <br>7-10: Advanced security measures implemented." },
-                # ... (add all other questions from Data Security)
+                { "question": "Are there access controls in place?: Check authorization mechanisms.", "description": "1-3: Limited access controls. <br>4-6: Basic access controls exist. <br>7-10: Comprehensive access control system." },
+                { "question": "How well is sensitive data protected?: Assess privacy measures.", "description": "1-3: Minimal privacy protection. <br>4-6: Standard privacy measures exist. <br>7-10: Strong privacy protection implemented." },
+                { "question": "Is there a disaster recovery plan?: Check backup procedures.", "description": "1-3: Limited or no recovery plan. <br>4-6: Basic recovery procedures exist. <br>7-10: Comprehensive disaster recovery plan." },
+                { "question": "Encryption Methods: How strong are the encryption methods used?", "description": "1-3: Basic or no encryption. <br>4-6: Standard encryption methods. <br>7-10: Advanced encryption protocols." },
+                { "question": "Security Monitoring: How well is security monitored?", "description": "1-3: Limited security monitoring. <br>4-6: Basic monitoring systems. <br>7-10: Advanced security monitoring." },
+                { "question": "Incident Response: How effective is the incident response plan?", "description": "1-3: Poor incident response. <br>4-6: Basic response procedures. <br>7-10: Comprehensive incident response." },
+                { "question": "Authentication Systems: How robust are authentication methods?", "description": "1-3: Basic authentication. <br>4-6: Standard authentication. <br>7-10: Advanced authentication systems." },
+                { "question": "Security Testing: How regularly is security testing performed?", "description": "1-3: Infrequent testing. <br>4-6: Regular basic testing. <br>7-10: Comprehensive regular testing." },
+                { "question": "Compliance Standards: How well are security standards met?", "description": "1-3: Minimal compliance. <br>4-6: Basic standards met. <br>7-10: Exceeds security standards." },
+                { "question": "Third-party Security: How secure are third-party integrations?", "description": "1-3: Poor third-party security. <br>4-6: Basic security measures. <br>7-10: Strong third-party security." },
+                { "question": "Security Training: How well are staff trained on security?", "description": "1-3: Limited security training. <br>4-6: Basic security awareness. <br>7-10: Comprehensive security training." }
             ],
             "Data Monetization Potential": [
                 { "question": "Can the data be monetized?: Assess commercial potential.", "description": "1-3: Limited monetization potential. <br>4-6: Some monetization opportunities exist. <br>7-10: High monetization potential." },
-                # ... (add all other questions from Data Monetization Potential)
+                { "question": "Are there existing market demands?: Check market interest.", "description": "1-3: Limited market interest. <br>4-6: Moderate market demand exists. <br>7-10: Strong market demand present." },
+                { "question": "What's the potential ROI?: Evaluate return on investment.", "description": "1-3: Low potential ROI. <br>4-6: Moderate potential ROI. <br>7-10: High potential ROI." },
+                { "question": "Are there competitive advantages?: Consider market position.", "description": "1-3: Limited competitive advantage. <br>4-6: Some competitive advantages exist. <br>7-10: Strong competitive advantages." },
+                { "question": "Market Size: How large is the potential market?", "description": "1-3: Small market size. <br>4-6: Medium market size. <br>7-10: Large market opportunity." },
+                { "question": "Revenue Models: How diverse are potential revenue streams?", "description": "1-3: Limited revenue options. <br>4-6: Several revenue streams. <br>7-10: Multiple diverse revenue models." },
+                { "question": "Scalability: How scalable is the monetization potential?", "description": "1-3: Limited scalability. <br>4-6: Moderate scaling possible. <br>7-10: Highly scalable opportunity." },
+                { "question": "Implementation Ease: How easily can monetization be implemented?", "description": "1-3: Difficult implementation. <br>4-6: Moderate complexity. <br>7-10: Easy to implement." },
+                { "question": "Market Readiness: How ready is the market for this data?", "description": "1-3: Market not ready. <br>4-6: Market developing. <br>7-10: Market highly receptive." },
+                { "question": "Competitive Landscape: How favorable is the competitive environment?", "description": "1-3: Highly competitive. <br>4-6: Moderate competition. <br>7-10: Limited competition." },
+                { "question": "Partnership Opportunities: Are there valuable partnership possibilities?", "description": "1-3: Limited partnerships. <br>4-6: Some partnership options. <br>7-10: Strong partnership potential." },
+                { "question": "Legal Feasibility: How legally feasible is monetization?", "description": "1-3: Significant legal barriers. <br>4-6: Some legal considerations. <br>7-10: Legally straightforward." }
             ],
             "Strategic Value of Data": [
                 { "question": "How aligned is the data with business objectives?: Check strategic fit.", "description": "1-3: Poor alignment with objectives. <br>4-6: Moderate alignment exists. <br>7-10: Strong alignment with objectives." },
-                # ... (add all other questions from Strategic Value of Data)
+                { "question": "Does the data provide competitive insights?: Assess strategic value.", "description": "1-3: Limited strategic insights. <br>4-6: Some valuable insights exist. <br>7-10: Highly valuable strategic insights." },
+                { "question": "Can the data drive innovation?: Consider future potential.", "description": "1-3: Limited innovation potential. <br>4-6: Some innovation opportunities exist. <br>7-10: High innovation potential." },
+                { "question": "Does the data support decision-making?: Evaluate utility.", "description": "1-3: Limited decision support value. <br>4-6: Moderate decision support utility. <br>7-10: High decision support value." },
+                { "question": "Market Position: How does the data strengthen market position?", "description": "1-3: Limited market impact. <br>4-6: Moderate market advantage. <br>7-10: Strong market positioning." },
+                { "question": "Growth Potential: How well does the data support growth?", "description": "1-3: Limited growth support. <br>4-6: Moderate growth potential. <br>7-10: Strong growth enablement." },
+                { "question": "Operational Efficiency: Does the data improve operations?", "description": "1-3: Limited operational impact. <br>4-6: Moderate efficiency gains. <br>7-10: Significant operational improvements." },
+                { "question": "Customer Value: How much value does it add for customers?", "description": "1-3: Limited customer value. <br>4-6: Moderate customer benefits. <br>7-10: High customer value addition." },
+                { "question": "Competitive Edge: Does it provide competitive advantage?", "description": "1-3: Limited competitive edge. <br>4-6: Moderate advantage. <br>7-10: Strong competitive advantage." },
+                { "question": "Future Relevance: How relevant will the data be in future?", "description": "1-3: Declining relevance. <br>4-6: Stable relevance. <br>7-10: Growing future importance." },
+                { "question": "Strategic Partnerships: Does it enable strategic partnerships?", "description": "1-3: Limited partnership value. <br>4-6: Some partnership opportunities. <br>7-10: Strong partnership potential." },
+                { "question": "Industry Impact: How does it impact industry position?", "description": "1-3: Limited industry impact. <br>4-6: Moderate industry influence. <br>7-10: Significant industry impact." }
             ]
         }
 
@@ -76,46 +156,57 @@ class DataConsultation:
         progress = st.session_state.consultation_step / len(self.tabs)
         st.progress(progress)
         
+        # Show question count for current section
+        st.info(f"📝 This section contains {len(questions)} questions. Please answer all questions before proceeding.")
+        
         # Display current questions
         for i, question in enumerate(questions):
-            st.subheader(question["question"])
+            st.subheader(f"Question {i+1}: {question['question']}")
             # Display description with proper HTML line breaks
             st.markdown(question["description"], unsafe_allow_html=True)
+            
+            # Initialize response storage for this question
+            if current_tab not in st.session_state.responses:
+                st.session_state.responses[current_tab] = []
+            
+            # Ensure we have enough slots for all questions
+            while len(st.session_state.responses[current_tab]) <= i:
+                st.session_state.responses[current_tab].append(5)  # Default value
+            
             response = st.slider(
                 "Score",
                 min_value=1,
                 max_value=10,
-                value=5,
-                key=f"q_{current_tab}_{i}"
+                value=st.session_state.responses[current_tab][i],
+                key=f"q_{current_tab}_{i}",
+                help="Rate this aspect of your data from 1 (poor) to 10 (excellent)"
             )
             
-            if current_tab not in st.session_state.responses:
-                st.session_state.responses[current_tab] = []
-            
             # Store response
-            while len(st.session_state.responses[current_tab]) <= i:
-                st.session_state.responses[current_tab].append(0)
             st.session_state.responses[current_tab][i] = response
+            
+            # Add spacing between questions
+            st.markdown("---")
         
         # Navigation buttons
         col1, col2 = st.columns(2)
         with col1:
             if st.session_state.consultation_step > 0:
-                if st.button("⬅️ Previous Section"):
+                if st.button("⬅️ Previous Section", use_container_width=True):
                     st.session_state.consultation_step -= 1
                     st.rerun()
         
         with col2:
             if st.session_state.consultation_step < len(self.tabs) - 1:
-                if st.button("Next Section ➡️"):
+                if st.button("Next Section ➡️", use_container_width=True):
                     # Ensure all questions in the current section are answered
-                    if len(st.session_state.responses[current_tab]) == len(questions):
+                    if len(st.session_state.responses[current_tab]) >= len(questions):
                         st.session_state.consultation_step += 1
                         st.rerun()
                     else:
                         st.warning("Please answer all questions in this section before proceeding.")
             else:
-                if st.button("View Results 📊"):
+                if st.button("View Results 📊", use_container_width=True, type="primary"):
                     st.session_state.consultation_step = len(self.tabs)  # Set to results page
                     st.rerun() 
 
