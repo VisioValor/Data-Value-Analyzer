@@ -15,7 +15,7 @@ from src.utils.report_utils import print_report
 from src.data_quality_consultation.consultation import DataConsultation
 from src.utils.pdf_report_generator import PDFReportGenerator
 from src.utils.report_collector import ReportCollector
-from src.utils.logo_utils import display_logo, get_favicon_data
+from src.utils.logo_utils import display_logo, get_favicon_data, detect_theme
 
 # Import from data_quality_tool if needed
 # from data_quality_tool.app import analyze_data_quality

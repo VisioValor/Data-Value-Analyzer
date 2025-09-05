@@ -129,32 +129,14 @@ def display_logo(theme=None, width=200, height=80, align="center", use_theme_tog
             logo_file = logo_path / "visiovalor_logo_white.svg"
         
         if logo_file.exists():
-            # Center the logo in sidebar
-            col1, col2, col3 = st.columns([1, 2, 1])
-            with col2:
-                st.image(str(logo_file), width=width)
+            # Display logo in sidebar centered
+            st.sidebar.image(str(logo_file), width=width)
         else:
-            # Fallback to text
-            st.markdown(f"<div style='text-align: center; font-family: Arial, sans-serif; font-size: 18px; font-weight: bold; color: {'black' if actual_theme == 'light' else 'white'};'>VisioValor</div>", unsafe_allow_html=True)
+            # Fallback to text in sidebar
+            st.sidebar.markdown(f"<div style='text-align: center; font-family: Arial, sans-serif; font-size: 18px; font-weight: bold;'>VisioValor</div>", unsafe_allow_html=True)
     else:
-        # Display logo in main area using HTML
-        logo_html = get_logo_html(actual_theme, width, height)
-        
-        # Add alignment styling
-        alignment_style = {
-            "left": "text-align: left;",
-            "center": "text-align: center;",
-            "right": "text-align: right;"
-        }.get(align, "text-align: center;")
-        
-        # Wrap in a container with alignment
-        full_html = f"""
-        <div style="{alignment_style}">
-            {logo_html}
-        </div>
-        """
-        
-        st.markdown(full_html, unsafe_allow_html=True)
+        # Do not display logo in main area - logo should only be in sidebar
+        st.warning("Logo should only be displayed in sidebar!")
 
 def get_favicon_data():
     """Get favicon data as base64 encoded string"""
