@@ -228,6 +228,29 @@ def download_cleaned_data(df):
 
 def create_progress_sidebar():
     """Create a detailed progress tracking sidebar"""
+    # Display VisioValor logo at the top of sidebar
+    # Use the selected theme from the toggle
+    theme = st.session_state.logo_theme if st.session_state.logo_theme != 'auto' else None
+    display_logo(theme=theme, in_sidebar=True, width=180, height=70)
+    st.sidebar.markdown("---")  # Add separator line
+    
+    # Add theme toggle for logo testing
+    if 'logo_theme' not in st.session_state:
+        st.session_state.logo_theme = 'auto'
+    
+    theme_options = ['auto', 'light', 'dark']
+    selected_theme = st.sidebar.selectbox(
+        "Logo Theme", 
+        theme_options, 
+        index=theme_options.index(st.session_state.logo_theme),
+        key="logo_theme_selector"
+    )
+    
+    if selected_theme != st.session_state.logo_theme:
+        st.session_state.logo_theme = selected_theme
+        st.rerun()
+    
+    st.sidebar.markdown("---")  # Add separator line
     st.sidebar.title("Navigation")
     
     # Define steps and their requirements
@@ -367,10 +390,6 @@ def main():
     
     # Use the page from radio button for consistency
     current_page = page
-    
-    # Display VisioValor logo at the top with theme toggle
-    display_logo(align="center", width=250, height=100, use_theme_toggle=True)
-    st.markdown("---")  # Add separator line
     
     if current_page == "Data Quality Check":
         st.title("🔍 Data Quality Analysis")

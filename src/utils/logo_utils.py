@@ -82,7 +82,7 @@ def get_logo_html(theme=None, width=200, height=80):
         # Fallback to text logo
         return f'<div style="font-family: Arial, sans-serif; font-size: 24px; font-weight: bold; color: {"white" if theme == "dark" else "black"};">VisioValor</div>'
 
-def display_logo(theme=None, width=200, height=80, align="center", use_theme_toggle=False):
+def display_logo(theme=None, width=200, height=80, align="center", use_theme_toggle=False, in_sidebar=False):
     """
     Display the VisioValor logo in Streamlit
     
@@ -92,8 +92,9 @@ def display_logo(theme=None, width=200, height=80, align="center", use_theme_tog
         height (int): Logo height in pixels
         align (str): 'left', 'center', or 'right'
         use_theme_toggle (bool): If True, adds a theme toggle button
+        in_sidebar (bool): If True, displays in sidebar with proper formatting
     """
-    if use_theme_toggle:
+    if use_theme_toggle and not in_sidebar:
         # Add theme toggle in sidebar
         if 'logo_theme' not in st.session_state:
             st.session_state.logo_theme = 'auto'
@@ -118,23 +119,42 @@ def display_logo(theme=None, width=200, height=80, align="center", use_theme_tog
     else:
         actual_theme = theme
     
-    logo_html = get_logo_html(actual_theme, width, height)
-    
-    # Add alignment styling
-    alignment_style = {
-        "left": "text-align: left;",
-        "center": "text-align: center;",
-        "right": "text-align: right;"
-    }.get(align, "text-align: center;")
-    
-    # Wrap in a container with alignment
-    full_html = f"""
-    <div style="{alignment_style}">
-        {logo_html}
-    </div>
-    """
-    
-    st.markdown(full_html, unsafe_allow_html=True)
+    if in_sidebar:
+        # Display logo in sidebar using st.image
+        logo_path = get_logo_path()
+        
+        if actual_theme == "light" or (actual_theme is None and detect_theme() == "light"):
+            logo_file = logo_path / "visiovalor_logo_black.svg"
+        else:
+            logo_file = logo_path / "visiovalor_logo_white.svg"
+        
+        if logo_file.exists():
+            # Center the logo in sidebar
+            col1, col2, col3 = st.columns([1, 2, 1])
+            with col2:
+                st.image(str(logo_file), width=width)
+        else:
+            # Fallback to text
+            st.markdown(f"<div style='text-align: center; font-family: Arial, sans-serif; font-size: 18px; font-weight: bold; color: {'black' if actual_theme == 'light' else 'white'};'>VisioValor</div>", unsafe_allow_html=True)
+    else:
+        # Display logo in main area using HTML
+        logo_html = get_logo_html(actual_theme, width, height)
+        
+        # Add alignment styling
+        alignment_style = {
+            "left": "text-align: left;",
+            "center": "text-align: center;",
+            "right": "text-align: right;"
+        }.get(align, "text-align: center;")
+        
+        # Wrap in a container with alignment
+        full_html = f"""
+        <div style="{alignment_style}">
+            {logo_html}
+        </div>
+        """
+        
+        st.markdown(full_html, unsafe_allow_html=True)
 
 def get_favicon_data():
     """Get favicon data as base64 encoded string"""
