@@ -15,6 +15,7 @@ from src.utils.report_utils import print_report
 from src.data_quality_consultation.consultation import DataConsultation
 from src.utils.pdf_report_generator import PDFReportGenerator
 from src.utils.report_collector import ReportCollector
+from src.utils.logo_utils import display_logo, get_favicon_data
 
 # Import from data_quality_tool if needed
 # from data_quality_tool.app import analyze_data_quality
@@ -328,9 +329,12 @@ def create_progress_sidebar():
         st.sidebar.info("💡 Review the final analysis and value estimation")
 
 def main():
+    # Get favicon data
+    favicon_data = get_favicon_data()
+    
     st.set_page_config(
-        page_title="Dataset Analysis Suite",
-        page_icon="💎",
+        page_title="VisioValor Data Valuation App",
+        page_icon=favicon_data if favicon_data else "💎",
         layout="wide"
     )
     
@@ -363,6 +367,10 @@ def main():
     
     # Use the page from radio button for consistency
     current_page = page
+    
+    # Display VisioValor logo at the top with theme toggle
+    display_logo(align="center", width=250, height=100, use_theme_toggle=True)
+    st.markdown("---")  # Add separator line
     
     if current_page == "Data Quality Check":
         st.title("🔍 Data Quality Analysis")

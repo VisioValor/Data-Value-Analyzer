@@ -1,0 +1,17 @@
+<svg width="200" height="80" viewBox="0 0 200 80" xmlns="http://www.w3.org/2000/svg">
+  <!-- Black VisioValor Logo for Dark Theme -->
+  <g>
+    <!-- Abstract symbol - three thick black lines with rounded ends -->
+    <!-- Left diagonal line -->
+    <line x1="20" y1="15" x2="35" y2="35" stroke="black" stroke-width="8" stroke-linecap="round"/>
+    
+    <!-- Middle inverted V shape -->
+    <path d="M 45 15 L 55 25 L 45 35" stroke="black" stroke-width="8" stroke-linecap="round" fill="none"/>
+    
+    <!-- Right diagonal line -->
+    <line x1="65" y1="15" x2="50" y2="35" stroke="black" stroke-width="8" stroke-linecap="round"/>
+    
+    <!-- VisioValor text -->
+    <text x="100" y="50" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="black">VisioValor</text>
+  </g>
+</svg>

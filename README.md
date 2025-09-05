@@ -1,6 +1,8 @@
-# Dataset Value Analyzer
+# VisioValor Data Valuation App
 
 A comprehensive tool for analyzing and determining the market value of datasets using machine learning. This application provides both a command-line interface and a web interface for easy dataset analysis.
+
+![VisioValor Logo](assets/logos/visiovalor_logo_black.svg)
 
 ## Features
 
@@ -10,6 +12,7 @@ A comprehensive tool for analyzing and determining the market value of datasets 
 - 📑 **Detailed Reports** - Comprehensive analysis reports with recommendations
 - 🌐 **Web Interface** - Easy-to-use Streamlit web application
 - 💻 **CLI Interface** - Command-line tool for batch processing
+- 🎨 **Adaptive Branding** - VisioValor logos that adapt to light/dark themes
 
 ## Quick Start
 
