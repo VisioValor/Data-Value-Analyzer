@@ -3,6 +3,7 @@ import plotly.graph_objects as go
 import pandas as pd
 import numpy as np
 from typing import Dict
+from datetime import datetime
 
 def create_radar_chart(responses: Dict, weights: Dict):
     """Create a radar chart from consultation responses"""
@@ -126,5 +127,53 @@ def show_results(responses, weights):
     
     with col2:
         if st.button("Proceed to Valuation ➡️", key="proceed_button"):
+            # Clear consultation state to exit consultation context
+            st.session_state.consultation_step = 0
+            st.session_state.responses = {}
             st.session_state.page = "Value Analysis"
-            st.rerun() 
+            st.session_state.consultation_complete = True
+            st.success("✅ Consultation completed! Redirecting to Value Analysis...")
+            # Force a rerun to ensure navigation happens
+            st.rerun()
+    
+    # Add PDF download option for consultation results
+    st.markdown("---")
+    st.subheader("📄 Download Consultation Report")
+    
+    col1, col2, col3 = st.columns([1, 2, 1])
+    with col2:
+        if st.button("📥 Download Consultation PDF", key="consultation_pdf_button"):
+            with st.spinner("Generating consultation report..."):
+                try:
+                    from src.utils.pdf_report_generator import PDFReportGenerator
+                    from src.utils.report_collector import ReportCollector
+                    
+                    # Get the cleaned dataframe if available
+                    df = st.session_state.get('cleaned_df', pd.DataFrame())
+                    
+                    # Collect consultation results
+                    all_results = ReportCollector.collect_all_results(df)
+                    
+                    # Generate PDF report
+                    pdf_generator = PDFReportGenerator()
+                    pdf_bytes = pdf_generator.generate_report(
+                        data_quality_results=all_results.get('data_quality'),
+                        consultation_results=all_results.get('consultation'),
+                        valuation_results=None,  # No valuation yet
+                        dataset_info=all_results.get('dataset_info')
+                    )
+                    
+                    # Create download button
+                    st.download_button(
+                        label="📥 Download Consultation PDF",
+                        data=pdf_bytes,
+                        file_name=f"consultation_report_{datetime.now().strftime('%Y%m%d_%H%M%S')}.pdf",
+                        mime="application/pdf",
+                        type="secondary",
+                        use_container_width=True
+                    )
+                    
+                    st.success("✅ Consultation report generated successfully!")
+                    
+                except Exception as e:
+                    st.error(f"Error generating consultation report: {str(e)}") 

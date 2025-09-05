@@ -5,6 +5,7 @@ import sys
 import os
 import io
 import numpy as np
+from datetime import datetime
 
 # Add parent directory to path
 sys.path.append(str(Path(__file__).parent.parent.parent))
@@ -12,6 +13,8 @@ sys.path.append(str(Path(__file__).parent.parent.parent))
 from src.analyzers.dataset_analyzer import DatasetAnalyzer
 from src.utils.report_utils import print_report
 from src.data_quality_consultation.consultation import DataConsultation
+from src.utils.pdf_report_generator import PDFReportGenerator
+from src.utils.report_collector import ReportCollector
 
 # Import from data_quality_tool if needed
 # from data_quality_tool.app import analyze_data_quality
@@ -344,13 +347,24 @@ def main():
     
     # Create sidebar
     st.sidebar.title("Navigation")
+    
+    # Create radio button - let it control the page directly
     page = st.sidebar.radio(
         "Go to", 
         ["Data Quality Check", "Data Consultation", "Value Analysis"],
-        index=["Data Quality Check", "Data Consultation", "Value Analysis"].index(st.session_state.page)
+        index=["Data Quality Check", "Data Consultation", "Value Analysis"].index(st.session_state.page),
+        key="navigation_radio"
     )
     
-    if page == "Data Quality Check":
+    # Update session state if radio button selection changed
+    if page != st.session_state.page:
+        st.session_state.page = page
+        st.rerun()
+    
+    # Use the page from radio button for consistency
+    current_page = page
+    
+    if current_page == "Data Quality Check":
         st.title("🔍 Data Quality Analysis")
         st.markdown("""
         Before valuing your dataset, let's analyze its quality and make necessary improvements.
@@ -436,7 +450,7 @@ def main():
             except Exception as e:
                 st.error(f"Error analyzing dataset: {str(e)}")
     
-    elif page == "Data Consultation":
+    elif current_page == "Data Consultation":
         st.title("🤝 Data Consultation")
         
         if st.session_state.cleaned_df is not None:
@@ -449,7 +463,7 @@ def main():
                 st.session_state.page = "Data Quality Check"
                 st.rerun()
     
-    else:  # Value Analysis page
+    elif current_page == "Value Analysis":  # Value Analysis page
         st.title("💎 Dataset Value Analysis")
         
         if st.session_state.cleaned_df is not None:
@@ -468,6 +482,9 @@ def main():
                     report = analyzer.analyze_dataset(str(file_path))
                 
                 if report:
+                    # Mark valuation as complete
+                    st.session_state.valuation_complete = True
+                    
                     # Display analysis results
                     st.success("Analysis complete! 🎉")
                     
@@ -480,6 +497,43 @@ def main():
                     with st.expander("📘 Valuation Methodology"):
                         for line in report["Valuation Methodology"]["Overview"]:
                             st.write(line)
+                    
+                    # Add PDF download section
+                    st.markdown("---")
+                    st.subheader("📄 Download Comprehensive Report")
+                    
+                    col1, col2, col3 = st.columns([1, 2, 1])
+                    with col2:
+                        if st.button("📥 Generate & Download PDF Report", type="primary", use_container_width=True):
+                            with st.spinner("Generating comprehensive PDF report..."):
+                                try:
+                                    # Collect all analysis results
+                                    all_results = ReportCollector.collect_all_results(df, str(file_path))
+                                    
+                                    # Generate PDF report
+                                    pdf_generator = PDFReportGenerator()
+                                    pdf_bytes = pdf_generator.generate_report(
+                                        data_quality_results=all_results.get('data_quality'),
+                                        consultation_results=all_results.get('consultation'),
+                                        valuation_results=all_results.get('valuation'),
+                                        dataset_info=all_results.get('dataset_info')
+                                    )
+                                    
+                                    # Create download button
+                                    st.download_button(
+                                        label="📥 Download PDF Report",
+                                        data=pdf_bytes,
+                                        file_name=f"dataset_analysis_report_{datetime.now().strftime('%Y%m%d_%H%M%S')}.pdf",
+                                        mime="application/pdf",
+                                        type="primary",
+                                        use_container_width=True
+                                    )
+                                    
+                                    st.success("✅ PDF report generated successfully! Click the download button above to save it.")
+                                    
+                                except Exception as e:
+                                    st.error(f"Error generating PDF report: {str(e)}")
+                                    st.write("Please ensure all analysis steps are completed before generating the report.")
                 
                 # Cleanup
                 os.remove(file_path)
