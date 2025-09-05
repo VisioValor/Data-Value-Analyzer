@@ -294,16 +294,14 @@ def create_progress_sidebar():
     
     for step_name, step_info in steps.items():
         # Determine step status
-        if step_name == current_page:
-            status = "in_progress"
-        elif completed_steps == total_steps:
-            status = "completed"
-        elif step_name == "Data Quality Check" and st.session_state.cleaned_df is not None:
+        if step_name == "Data Quality Check" and st.session_state.cleaned_df is not None:
             status = "completed"
         elif step_name == "Data Consultation" and st.session_state.consultation_complete:
             status = "completed"
-        elif step_name == "Value Analysis" and 'valuation_complete' in st.session_state:
+        elif step_name == "Value Analysis" and st.session_state.get('valuation_complete', False):
             status = "completed"
+        elif step_name == current_page:
+            status = "in_progress"
         else:
             status = "pending"
         
@@ -327,6 +325,10 @@ def create_progress_sidebar():
                             st.markdown(f"🔵 {substep}")
                         else:
                             st.markdown(f"⚪ {substep}")
+                    elif step_name == "Value Analysis" and st.session_state.get('valuation_complete', False):
+                        # All Value Analysis substeps are completed
+                        st.markdown(f"✅ {substep}")
+                        completed_steps += 1
                     else:
                         st.markdown(f"⚪ {substep}")
                 else:
