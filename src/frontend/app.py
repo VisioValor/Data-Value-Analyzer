@@ -235,9 +235,6 @@ def create_progress_sidebar():
     st.sidebar.markdown("---")  # Add separator line
     
     # Add theme toggle for logo testing
-    if 'logo_theme' not in st.session_state:
-        st.session_state.logo_theme = 'auto'
-    
     theme_options = ['auto', 'light', 'dark']
     selected_theme = st.sidebar.selectbox(
         "Logo Theme", 
@@ -368,6 +365,8 @@ def main():
         st.session_state.cleaned_df = None
     if 'consultation_complete' not in st.session_state:
         st.session_state.consultation_complete = False
+    if 'logo_theme' not in st.session_state:
+        st.session_state.logo_theme = 'auto'
     
     # Create detailed progress sidebar
     create_progress_sidebar()
