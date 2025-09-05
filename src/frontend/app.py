@@ -497,7 +497,6 @@ def main():
                 # Get consultation results if available
                 consultation_results = None
                 if hasattr(st.session_state, 'responses') and st.session_state.responses:
-                    from src.utils.report_collector import ReportCollector
                     consultation_results = ReportCollector.collect_consultation_results()
                 
                 # Analyze the dataset
