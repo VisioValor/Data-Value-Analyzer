@@ -15,6 +15,7 @@ from src.utils.report_utils import print_report
 from src.data_quality_consultation.consultation import DataConsultation
 from src.utils.pdf_report_generator import PDFReportGenerator
 from src.utils.report_collector import ReportCollector
+from src.utils.auth import is_authenticated, display_login_form, display_logout_button, check_session_timeout
 # Logo utilities removed - using text-only branding
 
 # Import from data_quality_tool if needed
@@ -354,6 +355,11 @@ def main():
         layout="wide"
     )
     
+    # Check authentication
+    if not is_authenticated() or not check_session_timeout():
+        display_login_form()
+        return
+    
     # Initialize session state
     if 'page' not in st.session_state:
         st.session_state.page = "Data Quality Check"
@@ -364,6 +370,9 @@ def main():
     
     # Create detailed progress sidebar and get selected page
     page = create_progress_sidebar()
+    
+    # Add logout button to sidebar
+    display_logout_button()
     
     # Update session state if radio button selection changed
     if page != st.session_state.page:
