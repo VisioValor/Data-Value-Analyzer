@@ -250,6 +250,14 @@ def create_progress_sidebar():
     st.sidebar.markdown("---")  # Add separator line
     st.sidebar.title("Navigation")
     
+    # Create radio button - let it control the page directly
+    page = st.sidebar.radio(
+        "Go to", 
+        ["Data Quality Check", "Data Consultation", "Value Analysis"],
+        index=["Data Quality Check", "Data Consultation", "Value Analysis"].index(st.session_state.page),
+        key="navigation_radio"
+    )
+    
     # Define steps and their requirements
     steps = {
         "Data Quality Check": {
@@ -347,6 +355,8 @@ def create_progress_sidebar():
         st.sidebar.info("💡 Answer questions about your dataset to help determine its value")
     elif current_page == "Value Analysis":
         st.sidebar.info("💡 Review the final analysis and value estimation")
+    
+    return page
 
 def main():
     # Get favicon data
@@ -368,19 +378,8 @@ def main():
     if 'logo_theme' not in st.session_state:
         st.session_state.logo_theme = 'auto'
     
-    # Create detailed progress sidebar
-    create_progress_sidebar()
-    
-    # Create sidebar
-    st.sidebar.title("Navigation")
-    
-    # Create radio button - let it control the page directly
-    page = st.sidebar.radio(
-        "Go to", 
-        ["Data Quality Check", "Data Consultation", "Value Analysis"],
-        index=["Data Quality Check", "Data Consultation", "Value Analysis"].index(st.session_state.page),
-        key="navigation_radio"
-    )
+    # Create detailed progress sidebar and get selected page
+    page = create_progress_sidebar()
     
     # Update session state if radio button selection changed
     if page != st.session_state.page:
